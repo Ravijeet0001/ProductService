@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,16 +25,23 @@ public class FakeStoreProductService implements ProductService{
         //call FakeStore to fetch the product by given id ==> http call
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class);
-        if(fakeStoreProductDto==null)
-            return null;
+
         //convert FakeStoreProductDto into product
         return convertFakeStoreProductintoProduct(fakeStoreProductDto);
     }
 
     @Override
     public List<Product> getAllProducts() {
-        RestTemplate restTemplate = new RestTemplate();
-        return null;
+        FakeStoreProductDto[] fakeStoreProductDtos = restTemplate.getForObject("https://fakestoreapi.com/products",
+                FakeStoreProductDto[].class);
+
+        //convert FakeStoreProductDto Array into Product List
+        List<Product> products = new ArrayList<>();
+
+        for(FakeStoreProductDto fakeStoreProductDto: fakeStoreProductDtos){
+            products.add(convertFakeStoreProductintoProduct(fakeStoreProductDto));
+        }
+        return products;
     }
 
     private Product convertFakeStoreProductintoProduct(FakeStoreProductDto fakeStoreProductDto){
