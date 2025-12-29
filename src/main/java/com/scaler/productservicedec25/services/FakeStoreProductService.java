@@ -1,6 +1,7 @@
 package com.scaler.productservicedec25.services;
 
 import com.scaler.productservicedec25.dtos.FakeStoreProductDto;
+import com.scaler.productservicedec25.exceptions.ProductNotFoundException;
 import com.scaler.productservicedec25.models.Category;
 import com.scaler.productservicedec25.models.Product;
 import org.springframework.http.HttpMethod;
@@ -25,11 +26,15 @@ public class FakeStoreProductService implements ProductService{
 
 
     @Override
-    public Product getSingleProduct(Long productId) {
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
 
         //call FakeStore to fetch the product by given id ==> http call
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class);
+
+        if(fakeStoreProductDto==null){
+            throw new ProductNotFoundException(productId);
+        }
 
         //convert FakeStoreProductDto into product
         return convertFakeStoreProductintoProduct(fakeStoreProductDto);

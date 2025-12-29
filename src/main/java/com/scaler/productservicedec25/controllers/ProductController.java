@@ -1,6 +1,7 @@
 package com.scaler.productservicedec25.controllers;
 
 
+import com.scaler.productservicedec25.exceptions.ProductNotFoundException;
 import com.scaler.productservicedec25.models.Product;
 import com.scaler.productservicedec25.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ProductController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
 
         ResponseEntity<Product> responseEntity = new ResponseEntity<>(
                 productService.getSingleProduct(id),
